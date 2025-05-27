@@ -1,0 +1,29 @@
+package io.github.danielreker.t1homeworks.model;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.jpa.domain.AbstractPersistable;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "transaction")
+public class Transaction extends AbstractPersistable<Long> {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
+
+    @NotNull
+    @Column(name = "amount", precision = 19, scale = 2)
+    private BigDecimal amount;
+
+    @NotNull
+    @Column(name = "time", nullable = false)
+    private Instant time;
+
+}

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -13,7 +12,12 @@ import java.time.Instant;
 @Setter
 @Entity
 @Table(name = "transaction")
-public class Transaction extends AbstractPersistable<Long> {
+public class Transaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
@@ -25,5 +29,4 @@ public class Transaction extends AbstractPersistable<Long> {
     @NotNull
     @Column(name = "time", nullable = false)
     private Instant time;
-
 }

@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.util.UUID;
 
@@ -13,7 +12,12 @@ import java.util.UUID;
 @Setter
 @Entity
 @Table(name = "client")
-public class Client extends AbstractPersistable<Long> {
+public class Client {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
+
     @NotNull
     @NotBlank
     @Column(name = "first_name", nullable = false)
@@ -24,12 +28,10 @@ public class Client extends AbstractPersistable<Long> {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @NotNull
     @Column(name = "middle_name")
     private String middleName;
 
     @NotNull
     @Column(name = "client_id", nullable = false, unique = true)
     private UUID clientId;
-
 }

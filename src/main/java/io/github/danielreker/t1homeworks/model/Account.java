@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.math.BigDecimal;
 
@@ -13,7 +12,12 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "account")
-public class Account extends AbstractPersistable<Long> {
+public class Account {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;

@@ -8,7 +8,7 @@ import io.github.danielreker.t1homeworks.model.dto.CreateTransactionRequest;
 import io.github.danielreker.t1homeworks.model.dto.TransactionDto;
 import io.github.danielreker.t1homeworks.repository.AccountRepository;
 import io.github.danielreker.t1homeworks.repository.TransactionRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

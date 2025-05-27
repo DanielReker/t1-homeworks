@@ -9,7 +9,7 @@ CREATE SEQUENCE IF NOT EXISTS transaction_seq START WITH 1 INCREMENT BY 50;
 CREATE TABLE account
 (
     id        BIGINT         NOT NULL,
-    client_id BIGINT         NOT NULL UNIQUE,
+    client_id BIGINT         NOT NULL,
     type      SMALLINT       NOT NULL,
     balance   DECIMAL(19, 2) NOT NULL,
     CONSTRAINT pk_account PRIMARY KEY (id)
@@ -21,7 +21,7 @@ CREATE TABLE client
     first_name  VARCHAR(255) NOT NULL,
     last_name   VARCHAR(255) NOT NULL,
     middle_name VARCHAR(255) NOT NULL,
-    client_id   UUID         NOT NULL,
+    client_id   UUID         NOT NULL UNIQUE,
     CONSTRAINT pk_client PRIMARY KEY (id)
 );
 

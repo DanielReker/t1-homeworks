@@ -2,6 +2,7 @@ package io.github.danielreker.t1homeworks.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.danielreker.t1homeworks.aop.annotation.Cached;
 import io.github.danielreker.t1homeworks.aop.annotation.Metric;
 import io.github.danielreker.t1homeworks.model.dto.AccountDto;
 import io.github.danielreker.t1homeworks.aop.annotation.LogDataSourceError;
@@ -32,6 +33,7 @@ public class AccountService {
 
     @Metric
     @LogDataSourceError
+    @Cached
     public Page<AccountDto> getAll(Pageable pageable) {
         Page<Account> accounts = accountRepository.findAll(pageable);
         return accounts.map(accountMapper::toAccountDto);
@@ -39,6 +41,7 @@ public class AccountService {
 
     @Metric
     @LogDataSourceError
+    @Cached
     public AccountDto getOne(Long id) {
         Optional<Account> accountOptional = accountRepository.findById(id);
         return accountMapper.toAccountDto(accountOptional.orElseThrow(() ->
@@ -47,6 +50,7 @@ public class AccountService {
 
     @Metric
     @LogDataSourceError
+    @Cached
     public List<AccountDto> getMany(List<Long> ids) {
         List<Account> accounts = accountRepository.findAllById(ids);
         return accounts.stream()

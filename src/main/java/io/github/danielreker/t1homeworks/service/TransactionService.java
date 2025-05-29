@@ -1,5 +1,6 @@
 package io.github.danielreker.t1homeworks.service;
 
+import io.github.danielreker.t1homeworks.aop.annotation.Cached;
 import io.github.danielreker.t1homeworks.aop.annotation.LogDataSourceError;
 import io.github.danielreker.t1homeworks.aop.annotation.Metric;
 import io.github.danielreker.t1homeworks.mapper.TransactionMapper;
@@ -34,6 +35,7 @@ public class TransactionService {
 
     @Metric
     @LogDataSourceError
+    @Cached
     public Page<TransactionDto> getAll(Pageable pageable) {
         Page<Transaction> transactions = transactionRepository.findAll(pageable);
         return transactions.map(transactionMapper::toTransactionDto);
@@ -41,6 +43,7 @@ public class TransactionService {
 
     @Metric
     @LogDataSourceError
+    @Cached
     public TransactionDto getOne(Long id) {
         Optional<Transaction> transactionOptional = transactionRepository.findById(id);
         return transactionMapper.toTransactionDto(transactionOptional.orElseThrow(() ->
@@ -49,6 +52,7 @@ public class TransactionService {
 
     @Metric
     @LogDataSourceError
+    @Cached
     public List<TransactionDto> getMany(List<Long> ids) {
         List<Transaction> transactions = transactionRepository.findAllById(ids);
         return transactions.stream()

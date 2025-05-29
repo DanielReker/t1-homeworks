@@ -3,6 +3,8 @@ spring:
     name: t1-homeworks
     metrics:
       time-limit-ms: 5
+    cache:
+      timeout-sec: 10
   flyway:
     baseline-on-migrate: true
     baseline-version: 0

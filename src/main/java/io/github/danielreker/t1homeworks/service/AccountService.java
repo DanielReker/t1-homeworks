@@ -2,6 +2,7 @@ package io.github.danielreker.t1homeworks.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.danielreker.t1homeworks.aop.annotation.Metric;
 import io.github.danielreker.t1homeworks.model.dto.AccountDto;
 import io.github.danielreker.t1homeworks.aop.annotation.LogDataSourceError;
 import io.github.danielreker.t1homeworks.mapper.AccountMapper;
@@ -29,12 +30,14 @@ public class AccountService {
 
     private final ObjectMapper objectMapper;
 
+    @Metric
     @LogDataSourceError
     public Page<AccountDto> getAll(Pageable pageable) {
         Page<Account> accounts = accountRepository.findAll(pageable);
         return accounts.map(accountMapper::toAccountDto);
     }
 
+    @Metric
     @LogDataSourceError
     public AccountDto getOne(Long id) {
         Optional<Account> accountOptional = accountRepository.findById(id);
@@ -42,6 +45,7 @@ public class AccountService {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity with id `%s` not found".formatted(id))));
     }
 
+    @Metric
     @LogDataSourceError
     public List<AccountDto> getMany(List<Long> ids) {
         List<Account> accounts = accountRepository.findAllById(ids);
@@ -50,6 +54,7 @@ public class AccountService {
                 .toList();
     }
 
+    @Metric
     @LogDataSourceError
     public AccountDto create(AccountDto dto) {
         Account account = accountMapper.toEntity(dto);
@@ -57,6 +62,7 @@ public class AccountService {
         return accountMapper.toAccountDto(resultAccount);
     }
 
+    @Metric
     @LogDataSourceError
     public AccountDto patch(Long id, JsonNode patchNode) throws IOException {
         Account account = accountRepository.findById(id).orElseThrow(() ->
@@ -70,6 +76,7 @@ public class AccountService {
         return accountMapper.toAccountDto(resultAccount);
     }
 
+    @Metric
     @LogDataSourceError
     public List<Long> patchMany(List<Long> ids, JsonNode patchNode) throws IOException {
         Collection<Account> accounts = accountRepository.findAllById(ids);
@@ -86,6 +93,7 @@ public class AccountService {
                 .toList();
     }
 
+    @Metric
     @LogDataSourceError
     public AccountDto delete(Long id) {
         Account account = accountRepository.findById(id).orElse(null);
@@ -95,6 +103,7 @@ public class AccountService {
         return accountMapper.toAccountDto(account);
     }
 
+    @Metric
     @LogDataSourceError
     public void deleteMany(List<Long> ids) {
         accountRepository.deleteAllById(ids);

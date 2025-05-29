@@ -1,6 +1,7 @@
 package io.github.danielreker.t1homeworks.service;
 
 import io.github.danielreker.t1homeworks.aop.annotation.LogDataSourceError;
+import io.github.danielreker.t1homeworks.aop.annotation.Metric;
 import io.github.danielreker.t1homeworks.mapper.TransactionMapper;
 import io.github.danielreker.t1homeworks.model.Account;
 import io.github.danielreker.t1homeworks.model.Transaction;
@@ -31,12 +32,14 @@ public class TransactionService {
     private final TransactionMapper transactionMapper;
 
 
+    @Metric
     @LogDataSourceError
     public Page<TransactionDto> getAll(Pageable pageable) {
         Page<Transaction> transactions = transactionRepository.findAll(pageable);
         return transactions.map(transactionMapper::toTransactionDto);
     }
 
+    @Metric
     @LogDataSourceError
     public TransactionDto getOne(Long id) {
         Optional<Transaction> transactionOptional = transactionRepository.findById(id);
@@ -44,6 +47,7 @@ public class TransactionService {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity with id `%s` not found".formatted(id))));
     }
 
+    @Metric
     @LogDataSourceError
     public List<TransactionDto> getMany(List<Long> ids) {
         List<Transaction> transactions = transactionRepository.findAllById(ids);
@@ -52,6 +56,7 @@ public class TransactionService {
                 .toList();
     }
 
+    @Metric
     @LogDataSourceError
     @Transactional
     public TransactionDto create(CreateTransactionRequest dto) {

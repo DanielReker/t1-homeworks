@@ -2,7 +2,7 @@ package io.github.danielreker.t1homeworks.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.danielreker.t1homeworks.AccountDto;
+import io.github.danielreker.t1homeworks.model.dto.AccountDto;
 import io.github.danielreker.t1homeworks.aop.annotation.LogDataSourceError;
 import io.github.danielreker.t1homeworks.mapper.AccountMapper;
 import io.github.danielreker.t1homeworks.model.Account;

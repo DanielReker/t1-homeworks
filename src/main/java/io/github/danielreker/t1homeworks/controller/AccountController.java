@@ -1,7 +1,7 @@
 package io.github.danielreker.t1homeworks.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.github.danielreker.t1homeworks.AccountDto;
+import io.github.danielreker.t1homeworks.model.dto.AccountDto;
 import io.github.danielreker.t1homeworks.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

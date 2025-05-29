@@ -1,7 +1,6 @@
 package io.github.danielreker.t1homeworks.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.github.danielreker.t1homeworks.AccountDto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
 

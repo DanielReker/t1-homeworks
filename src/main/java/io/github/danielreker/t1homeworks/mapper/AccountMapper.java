@@ -1,6 +1,6 @@
 package io.github.danielreker.t1homeworks.mapper;
 
-import io.github.danielreker.t1homeworks.AccountDto;
+import io.github.danielreker.t1homeworks.model.dto.AccountDto;
 import io.github.danielreker.t1homeworks.model.Account;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

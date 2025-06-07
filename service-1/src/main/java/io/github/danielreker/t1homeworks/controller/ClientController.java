@@ -4,6 +4,7 @@ import io.github.danielreker.t1homeworks.model.dto.ClientDto;
 import io.github.danielreker.t1homeworks.service.ClientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
@@ -20,7 +21,7 @@ public class ClientController {
     private final ClientService clientService;
 
     @GetMapping
-    public PagedModel<ClientDto> getAll(Pageable pageable) {
+    public PagedModel<ClientDto> getAll(@ParameterObject Pageable pageable) {
         Page<ClientDto> clientDtos = clientService.getAll(pageable);
         return new PagedModel<>(clientDtos);
     }

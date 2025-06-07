@@ -1,8 +1,9 @@
 package io.github.danielreker.t1homeworks.aop;
 
-import io.github.danielreker.t1homeworks.model.TimeLimitExceedLog;
-import io.github.danielreker.t1homeworks.repository.TimeLimitExceedLogRepository;
+import io.github.danielreker.t1homeworks.model.dto.TimeLimitExceedLogDto;
+import io.github.danielreker.t1homeworks.service.TimeLimitExceedLogService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,12 +16,13 @@ import java.util.concurrent.TimeUnit;
 
 @Aspect
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class MetricAspect {
     @Value("${spring.application.metrics.time-limit-ms}")
     private double timeLimitMs;
 
-    private final TimeLimitExceedLogRepository repository;
+    private final TimeLimitExceedLogService logService;
 
     @Around("@annotation(io.github.danielreker.t1homeworks.aop.annotation.Metric)")
     public Object measureTime(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -31,11 +33,15 @@ public class MetricAspect {
         } finally {
             clock.stop();
             if (clock.getTotalTimeMillis() > timeLimitMs) {
-                repository.save(TimeLimitExceedLog.builder()
-                        .measuredTimeMs(clock.getTotalTime(TimeUnit.MILLISECONDS))
-                        .methodSignature(joinPoint.getSignature().toLongString())
-                        .loggedAt(Instant.now())
-                        .build());
+                try {
+                    logService.logTimeLimitExceed(TimeLimitExceedLogDto.builder()
+                            .measuredTimeMs(clock.getTotalTime(TimeUnit.MILLISECONDS))
+                            .methodSignature(joinPoint.getSignature().toLongString())
+                            .loggedAt(Instant.now())
+                            .build());
+                } catch (Exception ex) {
+                    log.error("Failed to log time limit exceed: {}", ex.getMessage());
+                }
             }
         }
     }

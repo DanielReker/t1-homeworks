@@ -1,5 +1,6 @@
 package io.github.danielreker.t1homeworks.service;
 
+import io.github.danielreker.t1homeworks.kafka.MetricsProducer;
 import io.github.danielreker.t1homeworks.mapper.DataSourceErrorLogMapper;
 import io.github.danielreker.t1homeworks.model.dto.DataSourceErrorLogDto;
 import io.github.danielreker.t1homeworks.repository.DataSourceErrorLogRepository;

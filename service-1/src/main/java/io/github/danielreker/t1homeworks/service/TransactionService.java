@@ -66,19 +66,19 @@ public class TransactionService {
     public TransactionDto create(CreateTransactionRequest dto) {
         Instant now = Instant.now();
         Account account = accountRepository
-                .findById(dto.getAccountId())
+                .findById(dto.accountId())
                 .orElseThrow(() ->
                         new ResponseStatusException(
                                 HttpStatus.NOT_FOUND,
-                                "Account with id `%s` not found".formatted(dto.getAccountId())
+                                "Account with id `%s` not found".formatted(dto.accountId())
                         )
                 );
-        account.setBalance(account.getBalance().add(dto.getAmount()));
+        account.setBalance(account.getBalance().add(dto.amount()));
         Account updatedAccount = accountRepository.save(account);
 
         Transaction transaction = Transaction.builder()
                 .account(updatedAccount)
-                .amount(dto.getAmount())
+                .amount(dto.amount())
                 .time(now)
                 .build();
 

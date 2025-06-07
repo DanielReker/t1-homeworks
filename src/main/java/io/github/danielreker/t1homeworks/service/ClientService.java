@@ -2,7 +2,9 @@ package io.github.danielreker.t1homeworks.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.danielreker.t1homeworks.aop.annotation.Cached;
 import io.github.danielreker.t1homeworks.aop.annotation.LogDataSourceError;
+import io.github.danielreker.t1homeworks.aop.annotation.Metric;
 import io.github.danielreker.t1homeworks.mapper.ClientMapper;
 import io.github.danielreker.t1homeworks.model.Client;
 import io.github.danielreker.t1homeworks.model.dto.ClientDto;
@@ -29,20 +31,26 @@ public class ClientService {
 
     private final ObjectMapper objectMapper;
 
+    @Metric
     @LogDataSourceError
+    @Cached
     public Page<ClientDto> getAll(Pageable pageable) {
         Page<Client> clients = clientRepository.findAll(pageable);
         return clients.map(clientMapper::toClientDto);
     }
 
+    @Metric
     @LogDataSourceError
+    @Cached
     public ClientDto getOne(Long id) {
         Optional<Client> clientOptional = clientRepository.findById(id);
         return clientMapper.toClientDto(clientOptional.orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "Entity with id `%s` not found".formatted(id))));
     }
 
+    @Metric
     @LogDataSourceError
+    @Cached
     public List<ClientDto> getMany(List<Long> ids) {
         List<Client> clients = clientRepository.findAllById(ids);
         return clients.stream()
@@ -50,6 +58,7 @@ public class ClientService {
                 .toList();
     }
 
+    @Metric
     @LogDataSourceError
     public ClientDto create(ClientDto dto) {
         Client client = clientMapper.toEntity(dto);
@@ -57,6 +66,7 @@ public class ClientService {
         return clientMapper.toClientDto(resultClient);
     }
 
+    @Metric
     @LogDataSourceError
     public ClientDto patch(Long id, JsonNode patchNode) throws IOException {
         Client client = clientRepository.findById(id).orElseThrow(() ->
@@ -70,6 +80,7 @@ public class ClientService {
         return clientMapper.toClientDto(resultClient);
     }
 
+    @Metric
     @LogDataSourceError
     public List<Long> patchMany(List<Long> ids, JsonNode patchNode) throws IOException {
         Collection<Client> clients = clientRepository.findAllById(ids);
@@ -86,6 +97,7 @@ public class ClientService {
                 .toList();
     }
 
+    @Metric
     @LogDataSourceError
     public ClientDto delete(Long id) {
         Client client = clientRepository.findById(id).orElse(null);
@@ -95,6 +107,7 @@ public class ClientService {
         return clientMapper.toClientDto(client);
     }
 
+    @Metric
     @LogDataSourceError
     public void deleteMany(List<Long> ids) {
         clientRepository.deleteAllById(ids);

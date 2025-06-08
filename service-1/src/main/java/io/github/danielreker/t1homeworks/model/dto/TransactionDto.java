@@ -1,11 +1,13 @@
 package io.github.danielreker.t1homeworks.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.github.danielreker.t1homeworks.model.enums.TransactionStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.Value;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.UUID;
 
 /**
  * DTO for {@link io.github.danielreker.t1homeworks.model.Transaction}
@@ -18,4 +20,8 @@ public class TransactionDto {
     BigDecimal amount;
     @NotNull
     Instant time;
+    @NotNull
+    UUID transactionId;
+    @NotNull
+    TransactionStatus status;
 }

@@ -51,3 +51,8 @@ INSERT INTO transaction (id, transaction_id, status, account_id, amount, "time")
 (13, '7621d18d-3ded-441e-b410-4b6a4b499754', 'ACCEPTED', 7, 120.00, '2023-10-21T10:00:00Z'),
 (14, '2e03686f-4987-4f50-9341-e25a05a5b9d3', 'ACCEPTED', 7, -33.10, '2023-10-22T10:00:00Z'),
 (15, '7e93d109-e8a6-4d6d-9d68-25cc8f4d46f9', 'ACCEPTED', 7, -5.00, '2023-10-23T10:00:00Z');
+
+-- Reset sequences
+SELECT setval('client_id_seq', (SELECT MAX(id) FROM client));
+SELECT setval('account_id_seq', (SELECT MAX(id) FROM account));
+SELECT setval('transaction_id_seq', (SELECT MAX(id) FROM transaction));

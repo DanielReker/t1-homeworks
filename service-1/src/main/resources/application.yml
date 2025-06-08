@@ -7,6 +7,7 @@ spring:
       timeout-sec: 10
     kafka:
       metrics-topic: t1_demo_metrics
+      transaction-accept-topic: t1_demo_transaction_accept
 
   flyway:
     baseline-on-migrate: true
@@ -15,6 +16,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+    show-sql: true
 
   kafka:
     bootstrap-servers: localhost:9092

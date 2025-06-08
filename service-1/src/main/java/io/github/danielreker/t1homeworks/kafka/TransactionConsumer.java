@@ -18,7 +18,7 @@ public class TransactionConsumer {
     @KafkaListener(
             id = "${spring.kafka.consumer.group-id}",
             topics = "t1_demo_transactions",
-            containerFactory = "transactionListenerFactory"
+            containerFactory = "kafkaJsonContainerListenerFactory"
     )
     public void transactionListener(@Payload CreateTransactionRequest dto, Acknowledgment ack) {
         transactionService.create(dto);

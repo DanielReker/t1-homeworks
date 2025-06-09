@@ -127,7 +127,11 @@ public class TransactionService {
             return;
         }
 
+        log.info("Processing result of transaction with id `{}`, new status: {}",
+                dto.transactionId(), dto.status());
+
         transaction.setStatus(dto.status());
+
         if (transaction.getStatus() == TransactionStatus.BLOCKED
                 || transaction.getStatus() == TransactionStatus.REJECTED) {
 

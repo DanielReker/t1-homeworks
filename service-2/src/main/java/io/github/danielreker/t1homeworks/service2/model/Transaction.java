@@ -23,6 +23,9 @@ public class Transaction {
     @Column(name = "transaction_id", nullable = false, unique = true)
     private UUID transactionId;
 
+    @Column(name = "account_id", nullable = false)
+    private UUID accountId;
+
     @Column(name = "timestamp", nullable = false)
     private Instant timestamp;
 

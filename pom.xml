@@ -10,6 +10,7 @@
 
     <modules>
         <module>service-1</module>
+        <module>service-2</module>
     </modules>
 
 </project>

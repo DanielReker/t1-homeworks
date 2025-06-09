@@ -19,6 +19,25 @@ services:
       start_period: 10s
       retries: 5
 
+  service-2-postgres:
+    image: postgres:17.5
+    container_name: service-2-postgres
+    restart: "no"
+    ports:
+      - "5433:5432"
+    volumes:
+      - service-2-postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: t1_homeworks_service_2_db
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+
   zookeeper:
     image: zookeeper:3.9.3
     container_name: zookeeper
@@ -65,5 +84,6 @@ services:
 
 volumes:
   service-1-postgres_data:
+  service-2-postgres_data:
   zookeeper_data:
   kafka_data:

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 /**
  * DTO for {@link io.github.danielreker.t1homeworks.service1.model.Transaction}
@@ -12,6 +11,5 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CreateTransactionRequest(
         Long accountId,
-        @NotNull BigDecimal amount,
-        @NotNull UUID transactionId
+        @NotNull BigDecimal amount
 ) { }

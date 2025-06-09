@@ -27,6 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -91,7 +92,7 @@ public class TransactionService {
 
             Transaction transaction = Transaction.builder()
                     .account(updatedAccount)
-                    .transactionId(dto.transactionId())
+                    .transactionId(UUID.randomUUID())
                     .amount(dto.amount())
                     .time(now)
                     .status(TransactionStatus.REQUESTED)

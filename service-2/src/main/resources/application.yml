@@ -25,7 +25,7 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
-    open-in-view: false
+    open-in-view: true
 
   kafka:
     bootstrap-servers: localhost:9092

@@ -1,26 +1,19 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     password: 123
     username: postgres
-    url: jdbc:postgresql://localhost:5432/t1_homeworks_service_1_db
+    url: jdbc:postgresql://localhost:5433/t1_homeworks_service_2_db
 
   devtools:
     livereload:
-      port: 35729
+      port: 35730
 
   application:
     name: t1-homeworks
-    metrics:
-      time-limit-ms: 5
-    cache:
-      timeout-sec: 10
-    kafka:
-      metrics-topic: t1_demo_metrics
-      transaction-accept-topic: t1_demo_transaction_accept
 
   flyway:
     baseline-on-migrate: true

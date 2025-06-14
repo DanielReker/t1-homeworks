@@ -6,16 +6,16 @@ import io.github.danielreker.t1homeworks.service1.aop.annotation.Metric;
 import io.github.danielreker.t1homeworks.service1.kafka.TransactionAcceptProducer;
 import io.github.danielreker.t1homeworks.service1.mapper.TransactionMapper;
 import io.github.danielreker.t1homeworks.service1.model.Account;
+import io.github.danielreker.t1homeworks.service1.model.Client;
 import io.github.danielreker.t1homeworks.service1.model.Transaction;
-import io.github.danielreker.t1homeworks.service1.model.dto.CreateTransactionRequest;
-import io.github.danielreker.t1homeworks.service1.model.dto.TransactionAcceptDto;
-import io.github.danielreker.t1homeworks.service1.model.dto.TransactionDto;
-import io.github.danielreker.t1homeworks.service1.model.dto.TransactionResultDto;
+import io.github.danielreker.t1homeworks.service1.model.dto.*;
 import io.github.danielreker.t1homeworks.service1.model.enums.AccountStatus;
+import io.github.danielreker.t1homeworks.service1.model.enums.ClientStatus;
 import io.github.danielreker.t1homeworks.service1.model.enums.TransactionStatus;
 import io.github.danielreker.t1homeworks.service1.repository.AccountRepository;
 import io.github.danielreker.t1homeworks.service1.repository.TransactionRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,6 +33,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class TransactionService {
+    @Value("${spring.application.transactions.max-rejected}")
+    private long maxRejectedTransactions;
 
     private final TransactionRepository transactionRepository;
 
@@ -41,6 +43,7 @@ public class TransactionService {
     private final TransactionMapper transactionMapper;
 
     private final TransactionAcceptProducer transactionAcceptProducer;
+    private final ClientStatusService clientStatusService;
 
 
     @Metric
@@ -84,39 +87,68 @@ public class TransactionService {
                         )
                 );
 
-
-        if (account.getStatus() == AccountStatus.OPEN) {
-
-            account.setBalance(account.getBalance().add(dto.amount()));
-            Account updatedAccount = accountRepository.save(account);
-
-            Transaction transaction = Transaction.builder()
-                    .account(updatedAccount)
-                    .transactionId(UUID.randomUUID())
-                    .amount(dto.amount())
-                    .time(now)
-                    .status(TransactionStatus.REQUESTED)
-                    .build();
-
-            TransactionAcceptDto transactionAcceptDto = TransactionAcceptDto.builder()
-                    .transactionId(transaction.getTransactionId())
-                    .clientId(account.getClient().getClientId())
-                    .accountId(updatedAccount.getAccountId())
-                    .transactionId(transaction.getTransactionId())
-                    .timestamp(now)
-                    .accountBalance(updatedAccount.getBalance())
-                    .transactionAmount(dto.amount())
-                    .build();
-
-            transactionAcceptProducer.sendTransactionAccept(transactionAcceptDto);
-
-            Transaction resultTransaction = transactionRepository.save(transaction);
-            return transactionMapper.toTransactionDto(resultTransaction);
-
-        } else {
+        if (account.getStatus() != AccountStatus.OPEN) {
             log.warn("Account with id {} is {}", dto.accountId(), account.getStatus());
             return null;
         }
+
+
+        Client client = account.getClient();
+        if (client.getStatus() == null) {
+            ClientStatusResponseDto clientStatusResponseDto = clientStatusService
+                    .getClientStatus(client.getClientId(), account.getAccountId());
+
+            if (clientStatusResponseDto.isBlocked()) {
+                client.setStatus(ClientStatus.BLOCKED);
+            } else {
+                client.setStatus(ClientStatus.OPEN);
+            }
+        }
+
+        TransactionStatus transactionStatus = TransactionStatus.REQUESTED;
+        if (client.getStatus() == ClientStatus.BLOCKED) {
+            account.setStatus(AccountStatus.BLOCKED);
+            transactionStatus = TransactionStatus.REJECTED;
+            log.warn("Account with id {} is {}, rejecting incoming transaction",
+                    account.getAccountId(), account.getStatus());
+        } else {
+            Long rejectedTransactions = transactionRepository
+                    .countByStatusEqualsAndAccount_Client_ClientIdEquals(TransactionStatus.REJECTED, client.getClientId());
+            if (rejectedTransactions > maxRejectedTransactions) {
+                account.setStatus(AccountStatus.ARRESTED);
+                transactionStatus = TransactionStatus.REJECTED;
+            }
+        }
+
+
+        if (transactionStatus == TransactionStatus.REQUESTED) {
+            account.setBalance(account.getBalance().add(dto.amount()));
+        }
+
+        Transaction transaction = Transaction.builder()
+                .account(account)
+                .transactionId(UUID.randomUUID())
+                .amount(dto.amount())
+                .time(now)
+                .status(transactionStatus)
+                .build();
+        transaction = transactionRepository.save(transaction);
+
+
+        if (transaction.getStatus() == TransactionStatus.REQUESTED) {
+            TransactionAcceptDto transactionAcceptDto = TransactionAcceptDto.builder()
+                    .transactionId(transaction.getTransactionId())
+                    .clientId(account.getClient().getClientId())
+                    .accountId(account.getAccountId())
+                    .transactionId(transaction.getTransactionId())
+                    .timestamp(now)
+                    .accountBalance(account.getBalance())
+                    .transactionAmount(dto.amount())
+                    .build();
+            transactionAcceptProducer.sendTransactionAccept(transactionAcceptDto);
+        }
+
+        return transactionMapper.toTransactionDto(transaction);
     }
 
     @Transactional
@@ -133,8 +165,9 @@ public class TransactionService {
         transaction.setStatus(dto.status());
 
         if (transaction.getStatus() == TransactionStatus.BLOCKED
-                || transaction.getStatus() == TransactionStatus.REJECTED) {
-
+                || transaction.getStatus() == TransactionStatus.REJECTED
+                || transaction.getStatus() == TransactionStatus.CANCELLED
+        ) {
             Account account = accountRepository.findByAccountId(dto.accountId());
             if (account == null) {
                 log.warn("Account with id `{}` not found", dto.accountId());

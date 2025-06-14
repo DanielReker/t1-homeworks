@@ -21,6 +21,11 @@ spring:
     kafka:
       metrics-topic: t1_demo_metrics
       transaction-accept-topic: t1_demo_transaction_accept
+    transactions:
+      max-rejected: 4
+    external-services:
+      service-2:
+        base-url: http://localhost:8081/api/
 
   flyway:
     baseline-on-migrate: true

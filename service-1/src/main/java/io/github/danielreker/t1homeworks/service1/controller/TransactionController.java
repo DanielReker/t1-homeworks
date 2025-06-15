@@ -3,12 +3,14 @@ package io.github.danielreker.t1homeworks.service1.controller;
 import io.github.danielreker.t1homeworks.service1.model.dto.CreateTransactionRequest;
 import io.github.danielreker.t1homeworks.service1.model.dto.TransactionDto;
 import io.github.danielreker.t1homeworks.service1.service.TransactionService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/transactions")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "JwtBearerAuth")
 public class TransactionController {
 
     private final TransactionService transactionService;
@@ -37,6 +40,7 @@ public class TransactionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
     public TransactionDto create(@RequestBody @Valid CreateTransactionRequest dto) {
         return transactionService.create(dto);
     }

@@ -5,6 +5,11 @@ security:
   secret: 01234567890123456789012345678901234567890123456789012345678901234567890123456789
   expiration-ms: 3600000
 
+metrics-aspects:
+  kafka-topic: t1_demo_metrics
+  time-limit-ms: 5
+
+
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -18,12 +23,9 @@ spring:
 
   application:
     name: t1-homeworks
-    metrics:
-      time-limit-ms: 5
     cache:
       timeout-sec: 10
     kafka:
-      metrics-topic: t1_demo_metrics
       transaction-accept-topic: t1_demo_transaction_accept
     transactions:
       max-rejected: 4
@@ -56,3 +58,7 @@ spring:
         max.poll.records: 10
         max.poll.interval.ms: 300000
         heartbeat.interval.ms: 3000
+
+logging:
+  level:
+    ROOT: info

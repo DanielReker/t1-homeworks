@@ -8,7 +8,9 @@ security:
 metrics-aspects:
   kafka-topic: t1_demo_metrics
   time-limit-ms: 5
-
+  enable-data-source-error-logging: true
+  enable-time-limit-exceed-error-logging: true
+  initialize-db-schema: true
 
 spring:
   datasource:

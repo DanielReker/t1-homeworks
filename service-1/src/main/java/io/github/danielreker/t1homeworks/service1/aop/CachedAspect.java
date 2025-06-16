@@ -1,4 +1,4 @@
-package io.github.danielreker.t1homeworks.service1.aop.annotation;
+package io.github.danielreker.t1homeworks.service1.aop;
 
 import io.github.danielreker.t1homeworks.service1.aop.data.CacheEntry;
 import lombok.RequiredArgsConstructor;

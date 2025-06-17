@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class BlockedMetricsService {
     private AtomicInteger blockedClientsGauge;
-    private AtomicInteger blockedAccountsGauge;
+    private AtomicInteger arrestedAccountsGauge;
 
     private final ClientRepository clientRepository;
 
@@ -32,7 +32,7 @@ public class BlockedMetricsService {
     @PostConstruct
     public void registerMeters() {
         this.blockedClientsGauge = meterRegistry.gauge("blocked_clients", new AtomicInteger(0));
-        this.blockedAccountsGauge = meterRegistry.gauge("blocked_accounts", new AtomicInteger(0));
+        this.arrestedAccountsGauge = meterRegistry.gauge("arrested_accounts", new AtomicInteger(0));
     }
 
     @Async
@@ -46,10 +46,10 @@ public class BlockedMetricsService {
 
     @Async
     @Scheduled(fixedRateString = "${spring.application.metrics.refresh-rate-ms}")
-    public void updateBlockedAccountsMetrics() {
-        int blockedAccounts = accountRepository
-                .countByStatusIn(List.of(AccountStatus.BLOCKED, AccountStatus.ARRESTED));
-        log.debug("blocked_accounts = {}", blockedAccounts);
-        this.blockedAccountsGauge.set(blockedAccounts);
+    public void updateArrestedAccountsMetrics() {
+        int arrestedAccounts = accountRepository
+                .countByStatusIn(List.of(AccountStatus.ARRESTED));
+        log.debug("arrested_accounts = {}", arrestedAccounts);
+        this.arrestedAccountsGauge.set(arrestedAccounts);
     }
 }

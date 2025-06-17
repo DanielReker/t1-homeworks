@@ -1,8 +1,12 @@
 package io.github.danielreker.t1homeworks.service1.service;
 
+import io.github.danielreker.t1homeworks.service1.model.Account;
 import io.github.danielreker.t1homeworks.service1.model.Client;
+import io.github.danielreker.t1homeworks.service1.model.dto.UnblockAccountRequest;
+import io.github.danielreker.t1homeworks.service1.model.dto.UnblockAccountResponse;
 import io.github.danielreker.t1homeworks.service1.model.dto.UnblockClientRequest;
 import io.github.danielreker.t1homeworks.service1.model.dto.UnblockClientResponse;
+import io.github.danielreker.t1homeworks.service1.model.enums.AccountStatus;
 import io.github.danielreker.t1homeworks.service1.model.enums.ClientStatus;
 import io.github.danielreker.t1homeworks.service1.repository.AccountRepository;
 import io.github.danielreker.t1homeworks.service1.repository.ClientRepository;
@@ -70,8 +74,46 @@ public class UnblockService {
         Objects.requireNonNull(unblockClientResponse).unblockedClientIds()
                 .forEach(clientId -> {
                     log.info("Unblocking client {}", clientId);
-                    clientRepository.findByClientId(clientId).forEach(client ->
-                            client.setStatus(ClientStatus.OPEN));
+                    clientRepository
+                            .findByClientId(clientId)
+                            .setStatus(ClientStatus.OPEN);
+                });
+    }
+
+    @Async
+    @Scheduled(fixedRateString = "${spring.application.unblock.requests-period-ms}")
+    @Transactional
+    public void unblockAccounts() {
+        log.info("Unblocking up to {} accounts", accountsPerRequest);
+
+        URI uri = UriComponentsBuilder.fromUriString(service3Url)
+                .pathSegment("unblock", "accounts")
+                .build()
+                .toUri();
+
+        List<UUID> accountsToUnblock = accountRepository
+                .findByStatusIn(
+                        List.of(AccountStatus.BLOCKED, AccountStatus.ARRESTED),
+                        Limit.of(clientsPerRequest)
+                )
+                .stream()
+                .map(Account::getAccountId)
+                .toList();
+        UnblockAccountRequest unblockAccountRequest = new UnblockAccountRequest(accountsToUnblock);
+
+        UnblockAccountResponse unblockAccountResponse = restClient.post()
+                .uri(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(unblockAccountRequest)
+                .retrieve()
+                .body(UnblockAccountResponse.class);
+
+        Objects.requireNonNull(unblockAccountResponse).unblockedAccountIds()
+                .forEach(accountId -> {
+                    log.info("Unblocking account {}", accountId);
+                    accountRepository
+                            .findByAccountId(accountId)
+                            .setStatus(AccountStatus.OPEN);
                 });
     }
 }

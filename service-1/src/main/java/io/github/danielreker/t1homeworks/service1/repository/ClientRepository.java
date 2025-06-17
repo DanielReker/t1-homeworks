@@ -15,5 +15,5 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
             Limit limit
     );
 
-    List<Client> findByClientId(UUID clientId);
+    Client findByClientId(UUID clientId);
 }

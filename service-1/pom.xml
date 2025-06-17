@@ -126,6 +126,11 @@
             <artifactId>metrics-aspects-spring-boot-starter</artifactId>
             <version>0.0.19</version>
         </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
     </dependencies>
 

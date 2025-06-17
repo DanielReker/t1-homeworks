@@ -67,6 +67,27 @@ spring:
         max.poll.interval.ms: 300000
         heartbeat.interval.ms: 3000
 
+management:
+  metrics:
+    tags:
+      appName: @project.build.finalName@
+      application: @project.name@
+      appVersion: @project.version@
+  endpoints:
+    web.exposure.include: health,prometheus,metrics,info,kafka
+    access:
+      default: read_only
+  endpoint:
+    health:
+      show-details: always
+      access: read_only
+    shutdown:
+      access: read_only
+    logfile:
+      access: read_only
+    prometheus:
+      access: read_only
+
 logging:
   level:
     ROOT: info

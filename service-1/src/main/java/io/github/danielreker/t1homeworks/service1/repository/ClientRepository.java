@@ -16,4 +16,6 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     );
 
     Client findByClientId(UUID clientId);
+
+    int countByStatusIn(Collection<ClientStatus> statuses);
 }

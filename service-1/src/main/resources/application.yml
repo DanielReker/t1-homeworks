@@ -31,10 +31,12 @@ spring:
       transaction-accept-topic: t1_demo_transaction_accept
     transactions:
       max-rejected: 4
+    metrics:
+      refresh-rate-ms: 500
     unblock:
       clients-per-request: 5
       accounts-per-request: 5
-      requests-period-ms: 3000
+      requests-period-ms: 10000
     external-services:
       service-2:
         base-url: http://localhost:8081/api/

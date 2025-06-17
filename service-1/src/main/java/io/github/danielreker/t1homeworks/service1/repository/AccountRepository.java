@@ -16,4 +16,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
             Collection<AccountStatus> statuses,
             Limit limit
     );
+
+    int countByStatusIn(Collection<AccountStatus> statuses);
 }

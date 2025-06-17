@@ -1,0 +1,49 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: 123
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/t1_homeworks_service_1_db
+
+  devtools:
+    livereload:
+      port: 35729
+
+  application:
+    name: t1-homeworks
+    metrics:
+      time-limit-ms: 5
+    cache:
+      timeout-sec: 10
+    kafka:
+      metrics-topic: t1_demo_metrics
+      transaction-accept-topic: t1_demo_transaction_accept
+
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 0
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    open-in-view: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      retries: 3
+      properties:
+        retry.backoff.ms: 1000
+        enable.idempotence: false
+    consumer:
+      group-id: t1_demo
+      properties:
+        session.timeout.ms: 10000
+        max.partition.fetch.bytes: 300000
+        max.poll.records: 10
+        max.poll.interval.ms: 300000
+        heartbeat.interval.ms: 3000

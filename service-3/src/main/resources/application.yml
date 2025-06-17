@@ -8,3 +8,6 @@ spring:
 
   application:
     name: t1-homeworks-service-3
+    unblock:
+      client-unblock-probability: 0.7
+      account-unblock-probability: 0.3

@@ -1,7 +1,7 @@
 package io.github.danielreker.t1homeworks.aop;
 
-import io.github.danielreker.t1homeworks.model.DataSourceErrorLog;
 import io.github.danielreker.t1homeworks.service.DataSourceErrorLogService;
+import io.github.danielreker.t1homeworks.model.dto.DataSourceErrorLogDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -29,7 +29,7 @@ public class DataSourceErrorLogger {
             e.printStackTrace(new PrintWriter(stacktraceStringWriter));
             String stacktraceString = stacktraceStringWriter.toString();
 
-            logService.logDataSourceError(DataSourceErrorLog.builder()
+            logService.logDataSourceError(DataSourceErrorLogDto.builder()
                     .message(e.getMessage())
                     .stacktrace(stacktraceString)
                     .methodSignature(joinPoint.getSignature().toLongString())

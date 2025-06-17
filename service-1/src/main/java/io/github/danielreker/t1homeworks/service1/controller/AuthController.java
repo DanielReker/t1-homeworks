@@ -7,7 +7,7 @@ import io.github.danielreker.t1homeworks.service1.model.dto.MessageResponse;
 import io.github.danielreker.t1homeworks.service1.model.dto.SignupRequest;
 import io.github.danielreker.t1homeworks.service1.model.enums.RoleEnum;
 import io.github.danielreker.t1homeworks.service1.service.UserDetailsImpl;
-import io.github.danielreker.t1homeworks.service1.service.UserRepository;
+import io.github.danielreker.t1homeworks.service1.repository.UserRepository;
 import io.github.danielreker.t1homeworks.service1.util.JwtUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

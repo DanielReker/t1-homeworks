@@ -1,8 +1,8 @@
 package io.github.danielreker.t1homeworks.service1.service;
 
 import io.github.danielreker.t1homeworks.service1.aop.annotation.Cached;
-import io.github.danielreker.t1homeworks.service1.aop.annotation.LogDataSourceError;
-import io.github.danielreker.t1homeworks.service1.aop.annotation.Metric;
+import io.github.danielreker.t1homeworks.metricsaspectsspringbootstarter.aop.annotation.LogDataSourceError;
+import io.github.danielreker.t1homeworks.metricsaspectsspringbootstarter.aop.annotation.Metric;
 import io.github.danielreker.t1homeworks.service1.kafka.TransactionAcceptProducer;
 import io.github.danielreker.t1homeworks.service1.mapper.TransactionMapper;
 import io.github.danielreker.t1homeworks.service1.model.Account;

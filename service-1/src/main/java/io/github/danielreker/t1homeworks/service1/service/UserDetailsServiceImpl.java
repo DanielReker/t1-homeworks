@@ -1,6 +1,7 @@
 package io.github.danielreker.t1homeworks.service1.service;
 
 import io.github.danielreker.t1homeworks.service1.model.User;
+import io.github.danielreker.t1homeworks.service1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

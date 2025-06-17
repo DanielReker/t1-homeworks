@@ -31,9 +31,15 @@ spring:
       transaction-accept-topic: t1_demo_transaction_accept
     transactions:
       max-rejected: 4
+    unblock:
+      clients-per-request: 5
+      accounts-per-request: 5
+      requests-period-ms: 3000
     external-services:
       service-2:
         base-url: http://localhost:8081/api/
+      service-3:
+        base-url: http://localhost:8082/
 
   flyway:
     baseline-on-migrate: true

@@ -24,7 +24,7 @@ spring:
       port: 35729
 
   application:
-    name: t1-homeworks
+    name: t1-homeworks-service-1
     cache:
       timeout-sec: 10
     kafka:

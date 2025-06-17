@@ -13,7 +13,7 @@ spring:
       port: 35730
 
   application:
-    name: t1-homeworks
+    name: t1-homeworks-service-2
     limits:
       transactions:
         time-period-ms: 3000

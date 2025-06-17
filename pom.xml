@@ -11,6 +11,7 @@
     <modules>
         <module>service-1</module>
         <module>service-2</module>
+        <module>service-3</module>
     </modules>
 
 </project>

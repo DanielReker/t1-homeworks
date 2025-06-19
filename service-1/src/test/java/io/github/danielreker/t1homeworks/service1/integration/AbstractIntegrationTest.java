@@ -8,11 +8,9 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.testcontainers.kafka.ConfluentKafkaContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -32,8 +30,4 @@ public abstract class AbstractIntegrationTest {
     private static final PostgreSQLContainer<?> postgres =
             new PostgreSQLContainer<>("postgres:17.5");
 
-    @Container
-    @ServiceConnection
-    private static final ConfluentKafkaContainer kafka =
-            new ConfluentKafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.9.1"));
 }

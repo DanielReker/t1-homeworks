@@ -62,6 +62,9 @@ public class UnblockService {
                 .stream()
                 .map(Client::getClientId)
                 .toList();
+        if (clientsToUnblock.isEmpty()) {
+            return;
+        }
         UnblockClientRequest unblockClientRequest = new UnblockClientRequest(clientsToUnblock);
 
         UnblockClientResponse unblockClientResponse = restClient.post()
@@ -99,6 +102,9 @@ public class UnblockService {
                 .stream()
                 .map(Account::getAccountId)
                 .toList();
+        if (accountsToUnblock.isEmpty()) {
+            return;
+        }
         UnblockAccountRequest unblockAccountRequest = new UnblockAccountRequest(accountsToUnblock);
 
         UnblockAccountResponse unblockAccountResponse = restClient.post()

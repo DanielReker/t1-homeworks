@@ -1,17 +1,17 @@
 services:
 
-  postgres:
+  service-1-postgres:
     image: postgres:17.5
-    container_name: postgres
+    container_name: service-1-postgres
     restart: "no"
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - service-1-postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: t1_homeworks_db
+      POSTGRES_DB: t1_homeworks_service_1_db
     healthcheck:
       test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 10s
@@ -19,28 +19,24 @@ services:
       start_period: 10s
       retries: 5
 
-  pgadmin:
-    image: dpage/pgadmin4:9.3.0
-    container_name: pgadmin
+  service-2-postgres:
+    image: postgres:17.5
+    container_name: service-2-postgres
     restart: "no"
     ports:
-      - "5050:80"
+      - "5433:5432"
     volumes:
-      - pgadmin_data:/var/lib/pgadmin
-      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
-      - ./docker/pgadmin/pgpass:/pgadmin4/pgpass
+      - service-2-postgres_data:/var/lib/postgresql/data
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: 123
-      PGADMIN_CONFIG_SERVER_MODE: "False"
-      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: t1_homeworks_service_2_db
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:80/misc/ping || exit -1
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
       interval: 10s
       timeout: 5s
       start_period: 10s
       retries: 5
-    entrypoint: /bin/sh -c "chmod 600 /pgadmin4/pgpass; /entrypoint.sh;"
 
   zookeeper:
     image: zookeeper:3.9.3
@@ -87,7 +83,7 @@ services:
       - zookeeper
 
 volumes:
-  postgres_data:
-  pgadmin_data:
+  service-1-postgres_data:
+  service-2-postgres_data:
   zookeeper_data:
   kafka_data:

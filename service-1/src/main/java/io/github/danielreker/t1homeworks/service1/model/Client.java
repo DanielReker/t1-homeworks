@@ -1,5 +1,6 @@
 package io.github.danielreker.t1homeworks.service1.model;
 
+import io.github.danielreker.t1homeworks.service1.model.enums.ClientStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -34,4 +35,8 @@ public class Client {
     @NotNull
     @Column(name = "client_id", nullable = false, unique = true)
     private UUID clientId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private ClientStatus status;
 }

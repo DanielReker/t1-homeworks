@@ -1,4 +1,4 @@
-package io.github.danielreker.t1homeworks.service1.service;
+package io.github.danielreker.t1homeworks.service1.repository;
 
 import io.github.danielreker.t1homeworks.service1.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
